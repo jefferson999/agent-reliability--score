@@ -70,10 +70,10 @@ function renderReport(){
   const points=attempts.reduce((s,a)=>s+a.points,0);
   const possible=attempts.length*4;
   const successful=attempts.filter(a=>a.points===4).length;
-  const totalCost=attempts.reduce((s,a)=>s+(a.cost||0),0);
+  const totalCost=attempts.reduce((s,a)=>s+(a.cost||0),0); const anyCost=attempts.some(a=>a.cost!==null);
   const totalMinutes=attempts.reduce((s,a)=>s+(a.minutes||0),0);
   document.querySelector("#score-summary").innerHTML = attempts.length
-    ? `<p class="score-number">${scorePercent(points,possible)}%</p><p class="score-caption">${points} out of ${possible} points across ${attempts.length} tests. ${successful} perfect 4/4 tests.</p><p class="score-caption">Cost per successful test: ${successful? "$"+(totalCost/successful).toFixed(2) : "Not enough perfect tests yet"}. Total time: ${totalMinutes? totalMinutes+" min" : "Not entered"}.</p>`
+    ? `<p class="score-number">${scorePercent(points,possible)}%</p><p class="score-caption">${points} out of ${possible} points across ${attempts.length} tests. ${successful} perfect 4/4 tests.</p><p class="score-caption">Cost per successful test: ${successful && anyCost ? "$"+(totalCost/successful).toFixed(2) : (successful ? "Not entered" : "Not enough perfect tests yet")}. Total time: ${totalMinutes? totalMinutes+" min" : "Not entered"}.</p>`
     : '<p class="score-number">—%</p><p class="score-caption">Score tests to see your results.</p>';
   const catEl=document.querySelector("#category-scores"); catEl.replaceChildren();
   Object.entries(categories).forEach(([key,cat])=>{
@@ -114,8 +114,8 @@ document.querySelector("#show-example").addEventListener("click", ()=>{ output.v
 document.querySelector("#clear-form").addEventListener("click", ()=>{ output.value=""; criteria.forEach(([n])=>{form.elements[n].checked=false;}); form.elements.minutes.value=""; form.elements.cost.value=""; message.textContent=""; output.focus(); });
 document.querySelector("#reset-report").addEventListener("click", ()=>{ attempts=[]; renderReport(); message.textContent="Report cleared. History cleared from this browser only."; });
 document.querySelector("#export").addEventListener("click", ()=>{
-  const points=attempts.reduce((s,a)=>s+a.points,0); const successful=attempts.filter(a=>a.points===4).length; const totalCost=attempts.reduce((s,a)=>s+(a.cost||0),0);
-  const lines=["# Agent Reliability Score v0.2","","Overall: "+scorePercent(points,attempts.length*4)+"% ("+points+"/"+(attempts.length*4)+" points across "+attempts.length+" tests)","","Cost per successful test: "+(successful? "$"+(totalCost/successful).toFixed(2) : "Not enough perfect tests yet"),"","## Category scores"];
+  const points=attempts.reduce((s,a)=>s+a.points,0); const successful=attempts.filter(a=>a.points===4).length; const totalCost=attempts.reduce((s,a)=>s+(a.cost||0),0); const anyCost=attempts.some(a=>a.cost!==null);
+  const lines=["# Agent Reliability Score v0.2","","Overall: "+scorePercent(points,attempts.length*4)+"% ("+points+"/"+(attempts.length*4)+" points across "+attempts.length+" tests)","","Cost per successful test: "+(successful && anyCost ? "$"+(totalCost/successful).toFixed(2) : (successful ? "Not entered" : "Not enough perfect tests yet")),"","## Category scores"];
   Object.entries(categories).forEach(([k,cat])=>{ const g=attempts.filter(a=>a.category===k); const e=g.reduce((s,a)=>s+a.points,0); lines.push(`- ${cat.label}: ${g.length? scorePercent(e,g.length*4)+"% ("+e+"/"+(g.length*4)+", "+g.length+" tests)" : "Not tested"}`); });
   lines.push("","## Tasks");
   attempts.forEach(a=>{ lines.push(`- **${a.categoryLabel} — ${a.taskTitle}: ${a.points}/4** (${a.agent||"Unnamed agent"})`); Object.entries(a.criteria).forEach(([l,p])=>lines.push(`  - [${p?"x":" "}] ${l}`)); lines.push(`  - Fix: ${whatToFix(a)}`); });
