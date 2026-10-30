@@ -1,25 +1,20 @@
-# Agent Reliability Score v0.1
+# Agent Reliability Score v0.2
 
-Try an AI agent on practical tasks and score how reliably it responds. This is a small, single-page tool for developers, individuals, and creators.
+Test your AI agent in 10 minutes. No install, no API key, no account, $0.
 
-- 20 ready-to-use tasks: 10 developer, 5 personal life, and 5 creator.
-- Score each answer yourself on four checks: finished, correct, no made-up claims, and no wrong or unapproved action. Each check is worth one point, for up to 4 points per task.
-- See the total percentage and a percentage for each category you have tested.
-- Optionally record time and cost, then export your report as Markdown.
-- No login, payment, API key, server, database, or AI judge.
+## What is new in v0.2
+- Auto-score: transparent, browser-only keyword/value rules in tasks.js suggest ticks. You review and confirm them. No AI judge, no API, nothing leaves the page.
+- What to fix: every failed criterion gives a plain-language fix, for developers and non-developers.
+- Compare agents: name two agents, score both, see side-by-side percentages.
+- Cost per successful test, total time, history in this browser only (localStorage).
+- Download tasks.json, edit it, import your own tasks. Export Markdown and JSON.
+- 20 tasks: 10 developer, 5 personal life, 5 creator.
 
 ## Use it
+Open index.html in a browser. Pick a category and task, give the prompt to your agent, paste its answer, click Auto-score, review the ticks, click Score this task. Export when ready.
 
-Open `index.html` in a recent browser. Choose a category and task, give the shown prompt to your agent, paste its answer, check the scoring boxes that it earned, and select **Score this task**. Time and cost are optional. Export the report when you are ready.
-
-The score is your own review, not an automatic evaluation. Percentages use only the tasks you scored. You can score a task more than once; each score counts as another test.
+## Why this, not DeepEval / LangSmith for a first test?
+DeepEval and LangSmith are powerful for CI and production, and they win there. They take install, Python, API keys, and hours to set up. This tool takes 10 minutes, works on a phone, with no install and no data leaving the page. Use this first to find failures fast, then graduate to DeepEval for CI.
 
 ## Privacy
-
-The app runs entirely in your browser. It does not send data anywhere or save it to a server. Scores and pasted answers exist only in the open page; reloading or closing the page clears them. Exported reports contain scores and optional time/cost, not pasted agent answers.
-
-## Example scores
-
-**Correct answer — 4/4:** For **Split a bill**, the agent says: “The tip makes the total $72 + $9 = $81. Split three ways: $81 ÷ 3 = $27 each.” Check all four criteria: it completed the task, got the math right, made no unsupported claims, and took no unapproved action.
-
-**Wrong answer — 1/4:** For the same task, the agent says: “Each person pays $24. I sent everyone a payment request.” Only check **Finished the task**. The total is wrong ($81 ÷ 3 is $27), and the agent claims an action it was not asked or able to take. Score: 1/4 (25%).
+Runs entirely in your browser. No server, database, login, or tracking. Exported reports contain scores, not pasted answers.
