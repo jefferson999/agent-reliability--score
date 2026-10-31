@@ -32,7 +32,9 @@ textarea{min-height:150px;resize:vertical} .hint{color:#526078;font-size:.9rem}
 <header>
 <h1>Agent Reliability Score <span class="hint">v0.2</span></h1>
 <p class="subhead">Test your AI agent in 10 minutes. No install, no API key, no account. Auto-score suggests, you confirm — so a developer gets speed, and a non-developer gets plain-language fixes.</p>
-<span class="privacy">No account · No API key · Nothing leaves this page · $0</span>
+<span class="privacy">No account · No API key · $0 · Agent answers stay in this browser</span>
+<p class="hint">Anonymous totals only: when you score a test, an anonymous +1 count is sent (no answer, no name). See totals below. Your answers never leave this page.</p>
+<p class="hint">Tests scored by everyone so far: <strong id="ars-total-tests">—</strong> · Page loads: <strong id="ars-total-loads">—</strong> (anonymous counter, can be blocked by ad-blockers, so treat as a directional total, not an exact user count).</p>
 <p class="hint">Why this beats a manual checklist: Auto-score checks required words and values in the browser, instantly, with rules you can read in tasks.js. Why this beats DeepEval for a first test: no install, no Python, no API key, works on a phone in 10 minutes, not hours of setup. DeepEval wins for CI and automatic LLM judges — use this first, then graduate to it.</p>
 </header>
 <div class="layout">
@@ -76,7 +78,7 @@ textarea{min-height:150px;resize:vertical} .hint{color:#526078;font-size:.9rem}
 <h3>Compare agents</h3><div id="compare"><p class="empty">Score two different agents to compare them here.</p></div>
 <div><h3>Scored tasks <span id="attempt-count">(0)</span></h3><button class="secondary" id="reset-report" type="button" disabled>Start over</button></div>
 <div id="attempts"><p class="empty">Your test results will show up here.</p></div>
-<p class="hint">History is saved only in this browser (localStorage). Clear it with Start over. Reloading does not send anything anywhere.</p>
+<p class="hint">History is saved only in this browser (localStorage). Clear it with Start over. Your answers are not sent anywhere; only the anonymous +1 test count above leaves this page.</p>
 </aside>
 </div>
 </main>

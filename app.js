@@ -24,6 +24,15 @@ const message = document.querySelector("#form-message");
 const agentNameInput = document.querySelector("#agent-name");
 let attempts = [];
 try { attempts = JSON.parse(localStorage.getItem("ars_attempts")||"[]"); } catch(e){ attempts=[]; }
+// v0.2.2 anonymous totals ONLY: no agent answer, no name, no IP stored by us.
+// One anonymous +1 per page load / per scored test, via a free public counter.
+// If the counter is blocked, scoring still works — this never blocks the tool.
+const COUNTER_BASE = "https://countapi.mileshilliard.com/api/v1";
+function countHit(key){ try{ if(typeof fetch==="function") fetch(COUNTER_BASE+"/hit/"+key).catch(()=>{}); }catch(e){} }
+function countGet(key, elId){ try{ if(typeof fetch!=="function") return; fetch(COUNTER_BASE+"/get/"+key).then(r=>r.json()).then(d=>{ const el=document.getElementById(elId); if(el && typeof d.value==="number") el.textContent=d.value; }).catch(()=>{}); }catch(e){} }
+countHit("ars-v1-page-loads");
+countGet("ars-v1-tests-scored", "ars-total-tests");
+countGet("ars-v1-page-loads", "ars-total-loads");
 function save(){ try{ localStorage.setItem("ars_attempts", JSON.stringify(attempts.slice(-100))); }catch(e){} }
 function currentTask(){ return categories[categorySelect.value].tasks[Number(taskSelect.value)]; }
 function renderTasks(){
@@ -106,6 +115,7 @@ form.addEventListener("submit", e=>{
   const points=criteria.reduce((s,[n])=>s+Number(form.elements[n].checked),0);
   const crit=Object.fromEntries(criteria.map(([n,l])=>[l, form.elements[n].checked]));
   attempts.push({category:categorySelect.value, categoryLabel:cat.label, taskTitle:task.title, points, criteria:crit, minutes:readNum("minutes"), cost:readNum("cost"), agent:(agentNameInput.value||"").trim()||"Unnamed agent"});
+  countHit("ars-v1-tests-scored"); if(points===4) countHit("ars-v1-perfect-tests");
   renderReport(); message.textContent=`Scored ${points}/4 for ${task.title}. ${whatToFix(attempts[attempts.length-1])}`;
   output.value=""; criteria.forEach(([n])=>{form.elements[n].checked=false;}); form.elements.minutes.value=""; form.elements.cost.value="";
 });
